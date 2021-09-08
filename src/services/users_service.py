@@ -34,13 +34,13 @@ class UsersService:
         if not validators.email(email):
             raise UserEmailInvalid('The informed Email is not valid!')
 
+        if len(password) < 6:
+            raise UserPasswordTooShort('The password must contain 6 or more characters!')
+
         found_user = User.query.filter_by(email=email).first()
 
         if found_user:
             raise UserEmailAlreadyExists('The informed Email is already taken!')
-
-        if len(password) < 6:
-            raise UserPasswordTooShort('The password must contain 6 or more characters!')
 
         user = User(first_name=first_name, last_name=last_name, email=email, password=password)
 
