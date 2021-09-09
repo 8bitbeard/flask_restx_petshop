@@ -15,6 +15,11 @@ def app():
 
 
 @pytest.fixture
+def request_context(app):
+    return app.test_request_context
+
+
+@pytest.fixture
 def test_client(app):
     testing_client = app.test_client()
 

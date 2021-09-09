@@ -1,6 +1,7 @@
 """
 Users Controller Module
 """
+
 from flask import request
 from flask_restx import Resource
 
