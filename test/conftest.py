@@ -4,6 +4,8 @@ import asyncio
 from src import create_app
 from src.extensions import db
 
+from src.models.user import User
+
 
 @pytest.fixture
 def app():
@@ -59,3 +61,13 @@ def mock_get_sqlalchemy(mocker):
 def mock_db_session(mocker):
     mock = mocker.patch("src.services.users_service.db.session").return_value = mocker.Mock()
     return mock
+
+
+@pytest.fixture
+def insert_user_db():
+    user = User(first_name='Mock', last_name='User', email='mock_user@example.com', password='password')
+
+    db.session.add(user)
+    db.session.commit()
+
+    return user

@@ -18,8 +18,8 @@ user = UserDto.user
 class UsersController(Resource):
 
     @staticmethod
-    async def post():
-        data = (await request.get_json())['first_name']
+    def post():
+        data = request.get_json()
 
         users_service = UsersService()
         user_schema = UserSchema()
