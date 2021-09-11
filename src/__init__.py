@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 
-from src.extensions import db, migrate, bcrypt, ma
+from src.extensions import db, migrate, ma
 
 from src.config.config import config_by_name
 
@@ -17,7 +17,6 @@ def create_app(config_name='development'):
     app.config.from_object(config_by_name[config_name])
 
     db.init_app(app)
-    bcrypt.init_app(app)
     migrate.init_app(app, db, directory=MIGRATION_DIR)
 
     ma.init_app(app)

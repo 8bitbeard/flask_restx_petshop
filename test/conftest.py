@@ -1,5 +1,5 @@
-from re import DEBUG
 import pytest
+import asyncio
 
 from src import create_app
 from src.extensions import db
@@ -17,6 +17,14 @@ def app():
 @pytest.fixture
 def request_context(app):
     return app.test_request_context
+
+
+@pytest.fixture
+def mock_get_request():
+    future = asyncio.Future()
+    future.set_result({'first_name': 'Unit', 'last_name': 'Testing',
+                       'email': 'unit_testing@example.com', 'password': '123456'})
+    return future
 
 
 @pytest.fixture

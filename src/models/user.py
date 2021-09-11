@@ -5,7 +5,9 @@ User Model
 import uuid
 from datetime import datetime
 
-from src.extensions import db, bcrypt
+from src.extensions import db
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
@@ -34,10 +36,10 @@ class User(db.Model):
 
     @password.setter
     def password(self, password):
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        return bcrypt.check_password_hash(self.password_hash, password)
+        return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return "<User '{}'>".format(self.id)
