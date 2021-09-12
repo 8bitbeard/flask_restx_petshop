@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+      # db_tst:
+        # condition: service_healthy
+    env_file:
+      - ./.env.docker
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/usr/src/app
+      - ./src/database/migrations:/usr/src/app/src/database/migrations
+    restart: always
+
+  db:
+    image: mysql:5.7.22
+    logging:
+      driver: none
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: petshop_development
+      MYSQL_USER: petshop
+      MYSQL_PASSWORD: petshop
+    ports:
+      - '3355:3306'
+    volumes:
+      - .dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${MYSQL_ROOT_PASSWORD}' ]
+      timeout: 20s
+      retries: 10
+    restart: always
+
+  # db_tst:
+  #   image: mysql:5.7.22
+  #   environment:
+  #     MYSQL_DATABASE: petshop_testing
+  #     MYSQL_USER: root
+  #     MYSQL_PASSWORD: root
+  #     MYSQL_ROOT_PASSWORD: root
+  #   networks:
+  #     - default
+  #   ports:
+  #     - '3356:3306'
+  #   healthcheck:
+  #     test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${MYSQL_ROOT_PASSWORD}' ]
+  #     timeout: 20s
+  #     retries: 10
+  #   restart: always
