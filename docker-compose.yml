@@ -19,8 +19,10 @@ services:
 
   db:
     image: mysql:5.7.22
+    # image: mysql:8.0
     logging:
       driver: none
+    command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: petshop_development
@@ -30,6 +32,25 @@ services:
       - '3355:3306'
     volumes:
       - .dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${MYSQL_ROOT_PASSWORD}' ]
+      timeout: 20s
+      retries: 10
+    restart: always
+
+  db-tst:
+    image: mysql:5.7.22
+    # image: mysql:8.0
+    logging:
+      driver: none
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: petshop_testing
+      MYSQL_USER: petshop
+      MYSQL_PASSWORD: petshop
+    ports:
+      - '3356:3306'
     healthcheck:
       test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${MYSQL_ROOT_PASSWORD}' ]
       timeout: 20s
